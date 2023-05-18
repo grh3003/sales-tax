@@ -34,3 +34,12 @@ jobs:
         run: |
           echo Add other actions to build,
           echo test, and deploy your project.
+      - name: Build and Test
+        run: |
+          ./gradlew build
+          ./gradlew test
+          
+      - name: Generate JUnit Test Reports
+        uses: actions/checkout@v2
+        with:
+          path: test-results
