@@ -39,7 +39,8 @@ jobs:
           ./gradlew build
           ./gradlew test
           
-      - name: Generate JUnit Test Reports
-        uses: actions/checkout@v2
+      - name: Archive Test Reports
+        uses: actions/upload-artifact@v2
         with:
-          path: test-results
+           name: test-reports
+           path: build/test-results/test
