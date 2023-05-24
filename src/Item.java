@@ -1,3 +1,4 @@
+import java.math.BigDecimal;
 
 /**
  * @author ganesh
@@ -6,12 +7,12 @@
 public class Item {
 
 	private String name;
-	private double price;
+	private BigDecimal price;
 	
 	private boolean isImported;
 	private ItemCategory category;
 
-	public Item(String name,double price,ItemCategory category, boolean isExempted) {
+	public Item(String name,BigDecimal price,ItemCategory category, boolean isExempted) {
 
 	this.name = name;
 	this.price = price;
@@ -28,33 +29,18 @@ public class Item {
 	/**
 	 * @return the price
 	 */
-	public double getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
 	/**
 	 * @return the isExempted
 	 */
-	public boolean isExempted() {
+	public boolean isImported() {
 		return isImported;
 	}
-	public double getPriceWithTax() {
-
-		return price+calculateTax();
-	}
-	public double calculateTax() {
-		double finalTax = 0.0;
-		
-		if(!category.isSalesTaxExempted()) {
-			finalTax = finalTax+(price*0.10);
-		}
-		if(isImported) {
-			//add extra 5% with no exemption
-			finalTax = finalTax+(price*0.05);
-		}
-		
-		
-		return finalTax;
-	}
+public ItemCategory getCategory() {
+	return this.category;
+}
 
 }

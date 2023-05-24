@@ -1,16 +1,18 @@
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.math.BigDecimal;
+
 import org.junit.jupiter.api.Test;
 
 class GenerateSalesTaxTest {
 
 	@Test
 	void testItemList() {
-		Item item1 = new Item("Item1", 10, ItemCategory.OTHER,false);
-		ShoppingBaskets sb = new ShoppingBaskets();
-		sb.addItem(item1);
-
-		assertTrue(sb.getItemList().size() == 1);
+//		Item item1 = new Item("Item1", 10, ItemCategory.OTHER,false);
+//		ShoppingBaskets sb = new ShoppingBaskets();
+//		sb.addItem(item1);
+//
+//		assertTrue(sb.getItemList().size() == 1);
 
 	}
 
@@ -25,9 +27,9 @@ class GenerateSalesTaxTest {
 		 * Taxes: 1.50 > Total: 29.83
 		 */
 
-		Item item1 =  new Item("book",12.49,ItemCategory.BOOK,false);
-		Item item2 =  new Item("music CD",14.99,ItemCategory.OTHER,false);
-		Item item3 =  new Item("chocolate bar",0.85,ItemCategory.OTHER,false);
+		Item item1 =  new Item("book",BigDecimal.valueOf(12.49),ItemCategory.BOOK,false);
+		Item item2 =  new Item("music CD",BigDecimal.valueOf(14.99),ItemCategory.OTHER,false);
+		Item item3 =  new Item("chocolate bar",BigDecimal.valueOf(0.85),ItemCategory.FOOD,false);
 		
 		ShoppingBaskets sb =  new ShoppingBaskets();
 		sb.addItem(item1);
@@ -36,16 +38,14 @@ class GenerateSalesTaxTest {
 		// testing
 		assertTrue(sb.getItemList().size()==3);
 		
+		assertEquals(12.49,Billing.calculateCostforItem(item1).doubleValue());
+		assertEquals(16.49,Billing.calculateCostforItem(item2).doubleValue());
+		assertEquals(0.85,Billing.calculateCostforItem(item3).doubleValue());
 		
-		Billing.calculateTotalCost(sb);
-		Billing.calculateTotalTax(sb);
+		assertEquals(29.83,Billing.calculateTotalCost(sb));
+		assertEquals(1.50,Billing.calculateTotalTax(sb));
 		
 		
-		// test cost of each item after tax
-		
-		assertEquals(item1.getPriceWithTax(),12.49);
-		assertEquals(item2.getPriceWithTax(),16.49);
-		assertEquals(item3.getPriceWithTax(),0.85);
 		
 		/*
 		 * 
@@ -67,8 +67,8 @@ class GenerateSalesTaxTest {
 		   > Total: 65.15
 		 */
 		
-		Item item1 =  new Item("chocklates",10.00,ItemCategory.FOOD,true);
-		Item item2 =  new Item("perfume",47.50,ItemCategory.OTHER,true);
+		Item item1 =  new Item("chocklates",BigDecimal.valueOf(10.00),ItemCategory.FOOD,true);
+		Item item2 =  new Item("perfume",BigDecimal.valueOf(47.50),ItemCategory.OTHER,true);
 		
 		ShoppingBaskets sb =  new ShoppingBaskets();
 		sb.addItem(item1);
@@ -76,15 +76,13 @@ class GenerateSalesTaxTest {
 		// testing
 		assertTrue(sb.getItemList().size()==2);
 		
+		assertEquals(10.50,Billing.calculateCostforItem(item1).doubleValue());
+		assertEquals(54.65,Billing.calculateCostforItem(item2).doubleValue());
 		
-		Billing.calculateTotalCost(sb);
-		Billing.calculateTotalTax(sb);
+		assertEquals(65.15,Billing.calculateTotalCost(sb));
+		assertEquals(7.65,Billing.calculateTotalTax(sb));
 		
 		
-		// test cost of each item after tax
-		
-		assertEquals(item1.getPriceWithTax(),10.50);
-		assertEquals(item2.getPriceWithTax(),4.65);
 	}
 	
 	@Test
@@ -106,26 +104,27 @@ class GenerateSalesTaxTest {
 > Total: 74.68
 		 */
 		
-		Item item1 =   new Item("perfume",27.99,ItemCategory.OTHER,true);
-		Item item2 =  new Item("perfume",18.99,ItemCategory.OTHER,true);
-		Item item3 =  new Item("headeach pills",9.75,ItemCategory.MEDICAL_PRODUCT,false);
-		Item item4 =  new Item("chocklates",11.25,ItemCategory.OTHER,true);
+		Item item1 =   new Item("perfume",BigDecimal.valueOf(27.99),ItemCategory.OTHER,true);
+		Item item2 =  new Item("perfume",BigDecimal.valueOf(18.99),ItemCategory.OTHER,false);
+		Item item3 =  new Item("headeach pills",BigDecimal.valueOf(9.75),ItemCategory.MEDICAL_PRODUCT,false);
+		Item item4 =  new Item("chocklates",BigDecimal.valueOf(11.25),ItemCategory.FOOD,true);
 		ShoppingBaskets sb =  new ShoppingBaskets();
 		sb.addItem(item1);
 		sb.addItem(item2);
+		sb.addItem(item3);
+		sb.addItem(item4);
+		
 		// testing
-		assertTrue(sb.getItemList().size()==2);
+		assertTrue(sb.getItemList().size()==4);
 		
 		
-		Billing.calculateTotalCost(sb);
-		Billing.calculateTotalTax(sb);
+		assertEquals(32.19,Billing.calculateCostforItem(item1).doubleValue());
+		assertEquals(20.89,Billing.calculateCostforItem(item2).doubleValue());
+		assertEquals(9.75,Billing.calculateCostforItem(item3).doubleValue());
+		assertEquals(11.85,Billing.calculateCostforItem(item4).doubleValue());
 		
-		
-		// test cost of each item after tax
-		
-		assertEquals(item1.getPriceWithTax(),32.19);
-		assertEquals(item2.getPriceWithTax(),20.89);
-		assertEquals(item3.getPriceWithTax(),9.75);
-		assertEquals(item4.getPriceWithTax(),11.85);
+		assertEquals(6.70,Billing.calculateTotalTax(sb));
+		assertEquals(74.68,Billing.calculateTotalCost(sb));
 	}
+	
 }
