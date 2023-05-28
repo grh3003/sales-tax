@@ -19,6 +19,11 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
+import core.Billing;
+import core.Item;
+import core.ItemCategory;
+import core.ShoppingBaskets;
+
 public class SalesTaxCalculator {
 
 	private  Text receiptText;

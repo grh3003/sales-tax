@@ -1,4 +1,6 @@
-import static org.junit.jupiter.api.Assertions.*;
+package core;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
 
@@ -8,11 +10,11 @@ class GenerateSalesTaxTest {
 
 	@Test
 	void testItemList() {
-//		Item item1 = new Item("Item1", 10, ItemCategory.OTHER,false);
-//		ShoppingBaskets sb = new ShoppingBaskets();
-//		sb.addItem(item1);
-//
-//		assertTrue(sb.getItemList().size() == 1);
+		Item item1 = new Item("tesr",BigDecimal.valueOf(12.49),ItemCategory.BOOK,false);
+		ShoppingBaskets sb = new ShoppingBaskets();
+		sb.addItem(item1);
+
+		assertTrue(sb.getItemList().size() == 1);
 
 	}
 

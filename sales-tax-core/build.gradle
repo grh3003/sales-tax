@@ -1,0 +1,61 @@
+plugins {
+    id 'java'
+    
+}
+
+group 'sales-tax'
+version '1.0.0'
+
+apply plugin: 'java'
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java','src/test/java']
+        }
+    }
+}
+repositories {
+   mavenCentral()
+}
+
+dependencies {
+    // Use JUnit test framework.
+  implementation('org.junit.jupiter:junit-jupiter:5.7.1')
+    // This dependency is exported to consumers, that is to say found on their compile classpath.
+  //  api 'org.apache.commons:commons-math3:3.6.1'
+
+    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
+    implementation 'com.google.guava:guava:29.0-jre'
+}
+
+jar {
+destinationDirectory = file("${projectDir}/../sales-tax-gui/lib")
+}
+test {
+useJUnitPlatform(){
+includeEngines 'junit-jupiter'
+}
+//include 'core.GenerateSalesTaxTest'
+    //testJUnit()
+
+}
+tasks.register('coreJar', Jar) {
+    // Set the output directory for the JAR file
+    destinationDirectory.set(file("${projectDir}/../sales-tax-gui/lib"))
+
+    // Include the compiled class files in the JAR
+    from 'bin'
+
+    // Include any additional resources or files in the JAR if needed
+    // Example:
+    // from 'src/main/resources'
+}
+jar.dependsOn('coreJar')
+
+
+eclipse {
+    // Configure the Eclipse classpath
+    classpath {
+        containers 'org.eclipse.jdt.junit.JUNIT_CONTAINER/5/'
+    }
+}

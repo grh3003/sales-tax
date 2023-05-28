@@ -1,0 +1,50 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+}
+
+group 'sales-tax'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs "${projectDir}/lib"
+    }
+    maven {
+        url 'https://download.eclipse.org/releases/latest'
+    }
+}
+
+apply plugin: 'eclipse'
+apply plugin: 'java'
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src']
+        }
+    }
+}
+//configurations {
+  //  eclipsePDEImplementation.extendsFrom(implementation)
+//}
+
+
+dependencies {
+   
+    // Add the Core project's JAR file as a dependency
+    implementation files("${projectDir}/lib/sales-tax-core-1.0.0.jar")
+   // Example: implementation 'group:artifact:version'
+    
+}
+
+
+eclipse {
+    // Configure the Eclipse classpath
+    classpath {
+        containers 'org.eclipse.pde.core.requiredPlugins'
+    }
+}
+
+
