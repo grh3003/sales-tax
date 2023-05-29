@@ -1,5 +1,6 @@
 package core;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.math.BigDecimal;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.Test;
 class GenerateSalesTaxTest {
 
 	@Test
-	void testItemList() {
+	void testItemList() throws InvalidPriceException {
 		Item item1 = new Item("tesr",BigDecimal.valueOf(12.49),ItemCategory.BOOK,false);
 		ShoppingBaskets sb = new ShoppingBaskets();
 		sb.addItem(item1);
@@ -19,7 +20,7 @@ class GenerateSalesTaxTest {
 	}
 
 	@Test
-	public void testReceiptGeneration() {
+	public void testReceiptGeneration() throws InvalidPriceException {
 
 		/**
 		 * 
@@ -55,7 +56,7 @@ class GenerateSalesTaxTest {
 	}
 
 	@Test
-	public void tesReceiptGeneration2() {
+	public void tesReceiptGeneration2() throws InvalidPriceException {
 		
 		/*
 		 * Input 2: 
@@ -88,7 +89,7 @@ class GenerateSalesTaxTest {
 	}
 	
 	@Test
-	public void tesReceiptGeneration3() {
+	public void tesReceiptGeneration3() throws InvalidPriceException {
 		
 		/*
 		 Input 3:
@@ -127,6 +128,16 @@ class GenerateSalesTaxTest {
 		
 		assertEquals(6.70,Billing.calculateTotalTax(sb));
 		assertEquals(74.68,Billing.calculateTotalCost(sb));
+	}
+	
+	@Test
+	public void testCornerCases() {
+		//negative price
+	
+		assertThrows(InvalidPriceException.class, () ->  new Item("perfume",BigDecimal.valueOf(-1.0),ItemCategory.OTHER,true));
+		
+		
+		
 	}
 	
 }

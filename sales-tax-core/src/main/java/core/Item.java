@@ -13,9 +13,12 @@ public class Item {
 	private boolean isImported;
 	private ItemCategory category;
 
-	public Item(String name,BigDecimal price,ItemCategory category, boolean isExempted) {
+	public Item(String name,BigDecimal price,ItemCategory category, boolean isExempted) throws InvalidPriceException {
 
 	this.name = name;
+	if(price==null ||price.doubleValue()<0) {
+		 throw new InvalidPriceException("price can not be negative!!");
+	}
 	this.price = price;
 	this.isImported = isExempted;
 	this.category = category ;
