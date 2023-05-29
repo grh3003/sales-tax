@@ -170,13 +170,19 @@ public class SalesTaxCalculator {
 				BigDecimal price = new BigDecimal(priceText.getText());
 				String catagoty = categoryCombo.getItem(categoryCombo.getSelectionIndex());
 
-				Item item = new Item(name, price, (ItemCategory) categoryCombo.getData(catagoty),
-						isImportedBtn.getSelection());
-				sb.addItem(item);
-				TableItem tblItem = new TableItem(tableViewer.getTable(), SWT.NONE);
-
-				tblItem.setText(new String[] { item.getName(), String.valueOf(item.getPrice()),
-						item.getCategory().name(), item.isImported() ? "True" : "False" });
+				Item item;
+				try {
+					item = new Item(name, price, (ItemCategory) categoryCombo.getData(catagoty),
+							isImportedBtn.getSelection());
+					sb.addItem(item);
+					TableItem tblItem = new TableItem(tableViewer.getTable(), SWT.NONE);
+					
+					tblItem.setText(new String[] { item.getName(), String.valueOf(item.getPrice()),
+							item.getCategory().name(), item.isImported() ? "True" : "False" });
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				dialogShell.close();
 			}
 		});
