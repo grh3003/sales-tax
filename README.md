@@ -77,6 +77,7 @@ To build and run the project:
 4. Navigate to the sales-tax-ui directory and run the UI application.(SalesTaxCalculator main class)
    - Alternatively you can also launch UI by lancher file available in **launcher** folder
 
+**Note : Recommended to use Eclipse to build and run the app**
 ## Usage
  ### Added Items table 
 <img width="896" alt="Screenshot 2023-05-28 at 4 57 05 PM" src="https://github.com/grh3003/sales-tax/assets/133965155/3e7c1cc3-09ba-4f94-a16f-0b7a539e27c9">
