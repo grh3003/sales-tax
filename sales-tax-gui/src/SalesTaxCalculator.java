@@ -1,12 +1,19 @@
 import java.math.BigDecimal;
 
+import org.eclipse.jface.fieldassist.ControlDecoration;
+import org.eclipse.jface.fieldassist.FieldDecorationRegistry;
 import org.eclipse.jface.layout.GridDataFactory;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.jface.viewers.ArrayContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.TableViewerColumn;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.layout.RowLayout;
@@ -26,19 +33,21 @@ import core.ShoppingBaskets;
 
 public class SalesTaxCalculator {
 
-	private  Text receiptText;
-	private  Shell shell;
-	private  ShoppingBaskets sb;
-	private  TableViewer tableViewer;
+	private Text receiptText;
+	private Shell shell;
+	private ShoppingBaskets sb;
+	private TableViewer tableViewer;
+	private Button addButton;
+	private ControlDecoration decoration;
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		SalesTaxCalculator calc =  new SalesTaxCalculator();
+		SalesTaxCalculator calc = new SalesTaxCalculator();
 		calc.open();
-		
+
 	}
 
-	private  void open() {
+	private void open() {
 		sb = new ShoppingBaskets();
 		Display display = new Display();
 		shell = new Shell(display);
@@ -79,8 +88,8 @@ public class SalesTaxCalculator {
 				shell.getDisplay().sleep();
 			}
 		}
-		if(!shell.isDisposed())
-		shell.getDisplay().dispose();
+		if (!shell.isDisposed())
+			shell.getDisplay().dispose();
 	}
 
 	/**
@@ -112,7 +121,7 @@ public class SalesTaxCalculator {
 		tableViewer.setLabelProvider(new ItemLabelProvider());
 	}
 
-	private  void showAddItemDialog() {
+	private void showAddItemDialog() {
 		Shell dialogShell = new Shell(shell);
 		dialogShell.setText("Add Item");
 		dialogShell.setLayout(new GridLayout(2, false));
@@ -124,10 +133,17 @@ public class SalesTaxCalculator {
 		Label priceLabel = new Label(dialogShell, SWT.NONE);
 		priceLabel.setText("Price:");
 		Text priceText = new Text(dialogShell, SWT.BORDER);
+		// Create the decoration for the Text field
+		decoration = new ControlDecoration(priceText, SWT.LEFT | SWT.TOP);
+		Image errorImageDescriptor = FieldDecorationRegistry.getDefault()
+				.getFieldDecoration(FieldDecorationRegistry.DEC_ERROR).getImage();
+		decoration.setImage(errorImageDescriptor);
+		decoration.hide();
+		hookListener(priceText, dialogShell);
 
 		Label categoryLabel = new Label(dialogShell, SWT.NONE);
 		categoryLabel.setText("category:");
-		
+
 		Combo categoryCombo = new Combo(dialogShell, SWT.DROP_DOWN);
 		categoryCombo.setData(ItemCategory.BOOK.name(), ItemCategory.BOOK);
 		categoryCombo.setData(ItemCategory.FOOD.name(), ItemCategory.FOOD);
@@ -138,14 +154,15 @@ public class SalesTaxCalculator {
 		categoryCombo.add(ItemCategory.FOOD.name());
 		categoryCombo.add(ItemCategory.MEDICAL_PRODUCT.name());
 		categoryCombo.add(ItemCategory.OTHER.name());
-		//default OTHER category is selected
+		// default OTHER category is selected
 		categoryCombo.select(3);
 		Label isImportedLabel = new Label(dialogShell, SWT.NONE);
 		isImportedLabel.setText("isImported");
 		Button isImportedBtn = new Button(dialogShell, SWT.CHECK);
 
-		Button addButton = new Button(dialogShell, SWT.PUSH);
+		addButton = new Button(dialogShell, SWT.PUSH);
 		addButton.setText("Add");
+		addButton.setEnabled(false);
 		addButton.addSelectionListener(new SelectionAdapter() {
 			@Override
 			public void widgetSelected(SelectionEvent e) {
@@ -169,7 +186,29 @@ public class SalesTaxCalculator {
 
 	}
 
-	private  void generateReceipt() {
+	private void hookListener(Text priceText, Shell dialogShell) {
+
+		priceText.addModifyListener(new ModifyListener() {
+
+			@Override
+			public void modifyText(ModifyEvent e) {
+
+				String text = priceText.getText();
+				// Validate the input (check if it's a number)
+				boolean isValid = text.matches("\\d+");
+				if (!isValid) {
+					decoration.show();
+					decoration.showHoverText("only numbers are allowed");
+				} else {
+					decoration.hide();
+				}
+				// Enable or disable the OK button based on validation result
+				addButton.setEnabled(isValid);
+			}
+		});
+	}
+
+	private void generateReceipt() {
 		Shell dialogShell = new Shell(shell);
 		dialogShell.setText("Receipt");
 		dialogShell.setLayout(new GridLayout());
@@ -194,7 +233,5 @@ public class SalesTaxCalculator {
 		dialogShell.pack();
 		dialogShell.open();
 	}
-	
-	
 
 }
